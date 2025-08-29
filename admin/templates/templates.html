@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Шаблоны</h2>
+<form method="post">
+  <label>Название<br><input name="name" placeholder="Совет дня"></label>
+  <label>Тело шаблона<br><textarea name="body" placeholder="{{title}}\n{{bullets}}"></textarea></label>
+  <button type="submit">Сохранить</button>
+</form>
+
+<h3>Список</h3>
+<table>
+  <thead><tr><th>Название</th><th>Тело</th></tr></thead>
+  <tbody>
+  {% for t in templates %}
+    <tr><td>{{ t.name }}</td><td style="white-space:pre-line">{{ t.body }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

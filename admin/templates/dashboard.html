@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Dashboard</h2>
+<h3>Модули</h3>
+<ul>
+{% for k, v in enabled.items() %}
+  <li>{{ k }} — <b>{{ 'ON' if v else 'OFF' }}</b></li>
+{% endfor %}
+</ul>
+
+
+<h3>Лучшее время постинга</h3>
+<button onclick="fetch('/admin/besttime').then(r=>r.json()).then(d=>alert('Top часы: ' + d.best_hours.join(', ')))">Посчитать</button>
+
+
+<h3>Быстрые действия</h3>
+<form onsubmit="event.preventDefault(); fetch('/admin/auto/schedule_all', {method:'POST'}).then(r=>r.json()).then(d=>alert('Scheduled: '+(d.scheduled||0)))">
+  <button type="submit">Разложить очередь (best time + A/B)</button>
+</form>
+<form onsubmit="event.preventDefault(); const t=document.getElementById('gp_text').value; const p=document.getElementById('gp_prompt').value; fetch('/admin/media/genpost', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:new URLSearchParams({text:t,prompt:p})}).then(r=>r.json()).then(d=>alert('Создано: '+JSON.stringify(d).slice(0,200)))">
+  <input id="gp_text" placeholder="Текст поста" style="width:60%">
+  <input id="gp_prompt" placeholder="Промпт картинки" style="width:38%">
+  <button type="submit">AI-картинка + пост</button>
+</form>
+
+<h3>Последние посты</h3>
+<table>
+  <thead><tr><th>ID</th><th>Текст</th><th>Статус</th><th>Запланировано</th><th>Опубликовано</th></tr></thead>
+  <tbody>
+  {% for p in posts %}
+  <tr>
+    <td>{{ p.id }}</td>
+    <td style="max-width:500px; white-space:pre-line">{{ p.text }}</td>
+    <td><span class="badge">{{ p.status }}</span></td>
+    <td>{{ p.scheduled_at }}</td>
+    <td>{{ p.published_at }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<h3>Партнёрские клики (по slug)</h3>
+<table>
+  <thead><tr><th>Slug</th><th>Clicks</th></tr></thead>
+  <tbody>
+  {% for r in ctr %}
+  <tr><td>{{ r.slug }}</td><td>{{ r.cnt }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

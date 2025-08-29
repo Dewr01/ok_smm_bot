@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  ok-smm-bot:
+    build: .
+    container_name: ok_smm_bot
+    restart: always
+    ports:
+      - "5010:5000"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./uploads:/app/uploads

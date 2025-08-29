@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Календарь — {{ year }}-{{ "%02d"|format(month) }}</h2>
+<form method="get">
+  <label>Год <input type="number" name="year" value="{{ year }}"></label>
+  <label>Месяц <input type="number" name="month" value="{{ month }}" min="1" max="12"></label>
+  <button type="submit">Перейти</button>
+</form>
+<div class="grid">
+  {% for week in cal %}
+    {% for day in week %}
+      <div class="day" data-date="{{ key if day != 0 else '' }}">
+        {% if day != 0 %}
+          <b>{{ day }}</b>
+          {% set key = year|string ~ "-" ~ "%02d"|format(month) ~ "-" ~ "%02d"|format(day) %}
+          {% for p in by_date.get(key, []) %}
+            <div class="post" data-pid="{{ p.id }}">#{{ p.id }} — {{ p.status }}</div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% endfor %}
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.post').forEach(el => {
+    el.setAttribute('draggable','true');
+    el.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', el.dataset.pid);
+    });
+  });
+  document.querySelectorAll('.day').forEach(day => {
+    day.addEventListener('dragover', e => e.preventDefault());
+    day.addEventListener('drop', e => {
+      e.preventDefault();
+      const pid = e.dataTransfer.getData('text/plain');
+      const date = day.dataset.date;
+      fetch('/admin/drag_reschedule', {method:'POST', body: new URLSearchParams({post_id: pid, date: date, time: '14:00'})})
+        .then(r=>r.json()).then(_=>location.reload());
+    });
+  });
+});
+</script>
+
+{% endblock %}

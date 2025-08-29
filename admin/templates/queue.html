@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Очередь</h2>
+<table>
+  <thead><tr><th>ID</th><th>Текст</th><th>Запланировано</th></tr></thead>
+  <tbody>
+  {% for p in queue %}
+    <tr>
+      <td>{{ p.id }}</td>
+      <td style="max-width:500px; white-space:pre-line">{{ p.text }}</td>
+      <td>{{ p.scheduled_at }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Пакетная генерация (AI→OK)</h2>
+<p>Введи по одному пункту на строку: <code>текст|промпт|кол-во_картинок</code></p>
+<form onsubmit="event.preventDefault(); 
+  const lines = document.getElementById('lines').value.split('\n').filter(Boolean);
+  const items = lines.map(l=>{ const p=l.split('|'); return {text:p[0]||'Пост', prompt:p[1]||'постер', n_images:parseInt(p[2]||'1')}; });
+  fetch('/admin/media/batch', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({items})})
+    .then(r=>r.json()).then(d=>alert('Создано: '+d.results.length));
+">
+  <textarea id="lines" style="width:100%;height:200px" placeholder="Пример:
+Подборка мемов недели|смешной мем в стиле веб 2.0|2
+Совет дня: пей воду|капля воды с бликом|1"></textarea>
+  <button type="submit">Запустить пакет</button>
+</form>
+{% endblock %}

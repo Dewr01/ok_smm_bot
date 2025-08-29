@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Аналитика</h2>
+
+<p>График вовлечённости по часам:</p>
+<img src="/static/charts/engagement.png?ts={{ timestamp }}" style="max-width:100%;height:auto" alt="engagement">
+
+<p>График кликов по ссылкам:</p>
+<img src="/static/charts/ctr.png?ts={{ timestamp }}" style="max-width:100%;height:auto" alt="ctr">
+{% endblock %}

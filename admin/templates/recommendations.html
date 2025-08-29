@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Рекомендации AI</h2>
+<p>Лучшие часы и подсказки формата подтягиваются из модуля.</p>
+<button onclick="fetch('/admin/recommendations').then(r=>r.json()).then(d=>alert('Лучшие часы: '+d.best_hours.join(', ') + '\nСовет: ' + d.format_tip))">Обновить</button>
+<img src="/static/analytics/besttime.png" alt="График лучшего времени" style="max-width:600px;margin-top:10px;">
+{% endblock %}

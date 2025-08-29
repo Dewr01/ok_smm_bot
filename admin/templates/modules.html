@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Модули</h2>
+<form method="post">
+  {% for k, v in enabled.items() %}
+    <label><input type="checkbox" name="{{ k }}" {% if v %}checked{% endif %}> {{ k }}</label><br>
+  {% endfor %}
+  <button type="submit">Сохранить</button>
+</form>
+{% endblock %}
